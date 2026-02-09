@@ -1,0 +1,7 @@
+---
+title: "Blog"
+---
+
+Welcome to my blog.
+
+This page will be used for future course assignments.
