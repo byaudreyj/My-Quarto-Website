@@ -1,0 +1,301 @@
+---
+title: |
+  | ECON 2204 
+  | Introduction to Data Science for Finance and Economics
+subtitle: |
+    | Assignment 2
+    | Due Monday March 2, 2026
+author: Audrey Johnson
+format: 
+  pdf:
+    auto-stretch: false
+    include-in-header: 
+      text: |
+        \usepackage{fancyhdr}
+        \fancypagestyle{style1}{
+        \fancyhf{}
+        \fancyfoot[C]{\thepage}
+        \renewcommand{\headrulewidth}{0.4pt}
+        }
+
+        \fancypagestyle{style2}{
+        \fancyhf{}
+        \fancyhead[R]{Assignment 2}
+        \fancyhead[L]{ECON 2204}
+        \fancyfoot[C]{\thepage}
+        \renewcommand{\headrulewidth}{1pt}
+        }
+        \pagestyle{style2}
+bibliography: references.bib
+execute: 
+  echo: false
+---
+
+```{r}
+#| label: setup 
+#| include: FALSE
+
+
+# Load the tikzDevice library
+library(tikzDevice)
+library(ggplot2)
+# Set the default graphics device to tikz for the entire document
+knitr::opts_chunk$set(dev = 'png', fig.width = 6, fig.height = 4)
+
+set.seed(42)
+```
+
+\vspace{-0.5in}
+
+## Objective
+
+This assignment assesses your foundational skills in Quarto and Base R. 
+
+## Directions
+Answer all questions. Answer questions on the provided quarto document. Please submit a rendered PDF of your assignment and edited .qmd file. Also, upload the PDF of your assignment to your website.
+
+## Questions
+
+1.  Adding images to Quarto documnents. Please see <https://quarto.org/docs/authoring/figures.html> for help regardnig this question.
+
+### 1(a) and 1(b)
+
+![UW- logo](uw-logo-centre-stack-rgb-black.png){width=50%}
+
+### 1(c)
+
+:::{#fig-side-by-side layout-ncol=2}
+
+![Color](uw-logo-centre-stack-rgb-black.png)
+
+![Black and White](uw-logo-centre-stack-black.png)
+
+Two images added using Quarto in-text commands
+:::
+    
+  
+### 1(d) Image Using R
+
+```{r}
+#| label: fig-uw
+#| fig-cap: "Image Inserted Using R"
+#| fig-align: center
+#| out.width: "100%"
+knitr::include_graphics("uw-logo-centre-stack-rgb-black.png")
+```
+@fig-uw Displays the University of Winnipeg logo with black lettering.
+
+
+### 1(e) Smaller Image Inserted Using R
+
+```{r}
+#| label: fig-uw-small
+#| fig-cap: "Smaller Image Inserted Using R"
+#| fig-align: center
+#| out-width: "50%"
+knitr::include_graphics("uw-logo-centre-stack-rgb-black.png")
+```
+
+@fig-uw-small Displays the smaller University of Winnipeg logo with black lettering.
+
+### 1(f) Two Images side by side Using R
+
+```{r}
+#| label: fig-uw-two
+#| fig-cap: "Two images added using R"
+#| fig-subcap: c("Colour", "Black and White")
+#| layout-ncol: 2
+#| out-width: "100%" 
+knitr::include_graphics(c("uw-logo-centre-stack-rgb-black.png","uw-logo-centre-stack-black.png"))
+```
+
+@fig-uw-two displays two University of Winnipeg logos. @fig-uw-two-1 shows the logo in black and white.
+
+## Question 2: Citations
+
+   
+
+> "A final difference between youth and adult use concerns behavioral responses to market features. When consuming addictive goods, youths are more price elastic than adults [@grossman1997cigarette], and evidence from cigarette markets supports that youth are largely reliant on social markets for accessing age-restricted goods @katzman2007empirical). Given that legal users’ costs in the formal market affect supply in social markets [@hansen2013cigarette], medical marijuana market size may have an effect on youth use separate from the effect of legalization alone. Consistent with this, when [@salomonsen2012medical] surveyed adolescents engaged in substance use disorder treatment in Denver, Colorado, they found 74% reported using diverted medical marijuana. In 2013, a national survey found that, among high-school seniors, almost 18% of past-year users report access through another person’s medical marijuana “prescription” [@boyd2015adolescents]; among high-school seniors in states with MMLs, the share was 34% [@wadley2013american]. This suggests substantial diversion from legal to illegal markets that supply adolescents and young adults." 
+
+\- Smart, R., & Doremus, J. (2023). The kids aren’t alright: The effects of medical marijuana market size on adolescents. *Journal of Health Economics*, 87, 102700. https://doi.org/10.1016/j.jhealeco.2022.102700
+
+
+## Question 3: R Programming
+
+```{r}
+#| echo: true
+
+#3(a) Set number of observations
+n <- 1000
+
+#3(b) Generate uniform random variables
+u1 <- runif(n/2 ,0,1)
+u2 <- runif(n/2, 0,1)
+
+#3(c) Generate z1 and z2 using Box-Muller transform
+z1 <- sqrt(-2 *log(u1)) * cos(2 * pi * u2)
+
+z2 <- sqrt(-2 * log(u1)) * sin(2 * pi *u2)
+
+#3(d) Create vector z
+z <- c(z1,z2)
+
+#3(e) Set mu and sigma
+mu <- 5
+sigma <- 2
+
+# 3(f) Generate x
+x <- mu + sigma * z
+
+#3(g) Calculate mean and standard deviation
+mean_x <- mean(x)
+
+sd_x <- sd(x)
+
+
+#Display results
+mean_x
+sd_x
+```
+
+### 3(h) Histogram with Normal Curve
+
+
+```{r}
+#| label: fig-histogram
+#| fig-cap: "Histogram of $x$"
+#| dependson: q1
+#| eval: false
+#| echo: true
+
+hist(x,
+     freq = FALSE,
+     ylab = "Density",
+     xlab = "$x$" ,
+     main = "Histogram of x with Normal curve")
+    
+
+curve(dnorm(x, mean = mu, sd = sigma), 
+      col = "red", lwd = 2, add = TRUE)
+```
+
+
+   
+4. Data frames and indexing. A data frame in R is a table-like data structure used to store data in rows and columns, similar to a spreadsheet or a database table. It is one of the most commonly used structures for storing datasets in R. \
+\
+@tbl-hlth displays the total health expenditure by use of funds in Canada from 1975 to 2022. The data is stored in the `data.frame` called `df`.
+```{r}
+#| label: tbl-hlth
+#| tbl-cap: "Total health expenditure by use of funds, in millions of current dollars, Canada, 1975 to 2022 (Source: CIHI National Health Expenditure Trends)"
+cihi <- read.csv("hlthexp.csv")
+
+df <- data.frame(Year = cihi$Year,
+                 Hospitals = cihi$Hospitals,
+                 Physicians = cihi$Physicians,
+                 "Other Services" = cihi$Other.Institutions,
+                 Dental = cihi$Other.Professionals..Dental.Services,
+                 Vision = cihi$Other.Professionals..Vision.Care.Services,
+                 "Other Professionals" = cihi$Other.Professionals..Other.Services,
+                 check.names = FALSE)
+
+knitr::kable(df, 
+             align = c(rep('c',7)),
+             format.args = list(big.mark = ","))
+```
+
+
+```{r}
+#| echo: true
+
+# 4(a) Check for missing values in Hospitals
+any(is.na(df$Hospitals))
+
+
+
+# 4(c) 
+df$Year[is.na(df$TotalOtherServices)]
+
+# 4(e) Expenditure on hospitals in 1983
+df$Hospitals [df$Year == 1983]
+
+
+#4(f) List expenditure for 2012-2022
+df[df$year >= 2012 & df$year <= 2022,]
+```
+
+
+```{r}
+#| echo: true
+
+# Load the mpg dataset
+library(ggplot2)
+data(mpg) 
+```
+
+### 5(a) Subset to 2008 only
+
+```{r}
+mpg_2008 <- subset(mpg, year == 2008,)
+```
+
+### 5(b) Maximum and minimum city mpg
+```{r}
+max(mpg_2008$cty)
+```
+```{r}
+min(mpg_2008$cty)
+```
+
+### 5(c) Average city mpg using formula
+
+```{r}
+n <- nrow(mpg_2008)
+sum(mpg_2008$cty) / n
+```
+
+### 5(d) Average city mpg using mean
+```{r} 
+mean(mpg_2008$cty)
+```
+
+### 5(e) Create compact variable
+```{r}
+mpg_2008$compact <- ifelse(mpg_2008$class == "compact", 1, 0)
+# View the first few rows to verify
+head(mpg_2008[, c("class", "compact")])
+```
+
+### 5(f) Average city mpg for compact cars
+```{r}
+mean(mpg_2008$cty[mpg_2008$compact == 1])
+```
+
+### 5(g) Scatter plot with city vs highway mpg
+
+```{r}
+#| label: fig-mpg
+#| fig-cap: "City vs Highway Fuel Efficiency(mpg)"
+
+plot(mpg_2008$cty, mpg_2008$hwy,
+     xlab = "City MPG",
+     ylab = "Highway MPG",
+     main = "City vs Highway Fuel Efficiency",
+     pch = 19,
+     col = "blue")
+grid()
+```
+
+Figure @fig-mpg shows the fuel efficiency for city driving versus highway driving.
+
+   
+       
+## References
+
+:::{#refs}
+::: 
+
+
+    
+    
+    
+    

@@ -9,11 +9,11 @@ website:
       - href: index.qmd
         text: Home
       - href: CV.qmd
-      - text: CV
+        text: CV
       - href: contact.qmd
-      - text: Contact
+        text: Contact
       - href: blog.qmd
-      - text: Blog
+        text: Blog
       
 
 format:

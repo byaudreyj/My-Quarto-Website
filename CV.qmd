@@ -2,4 +2,4 @@
 title: "Curriculum Vitae"
 ---
 
-*Download my CV: [resume.docx.docx](resume.docx.docx)*
+*Download my CV: [resume.docx](resume.docx.docx)*
